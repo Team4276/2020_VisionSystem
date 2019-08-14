@@ -1,3 +1,3 @@
 #!/bin/bash
-rm -rf /home/pi/2019_VisionSystem/raspi/release
+rm -rf /home/pi/2020_VisionSystem/rpi4/release
 

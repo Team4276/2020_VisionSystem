@@ -53,7 +53,8 @@
     </target>
     <target name="Main">
         <java classname="frc.robot.Main" failonerror="true" fork="yes">
-            <env key="LD_LIBRARY_PATH" value="/home/pi/2019_VisionSystem/raspi/camsvr/lib/native_armhf"/>
+            <env key="java.library.path" value="/home/pi/2020_VisionSystem/rpi4/camsvr/lib/native_armhf"/>
+            <env key="LD_LIBRARY_PATH" value="/home/pi/2020_VisionSystem/rpi4/camsvr/lib/native_armhf"/>
             <classpath refid="camsvr.classpath"/>
         </java>
     </target>
