@@ -15,14 +15,12 @@ const int16_t I2C_SLAVE = 0x08;
 
 
 int16_t deltaX1, deltaY1, deltaX2, deltaY2;
-int8_t isFlowOK_1 = 0;  // false
-int8_t isFlowOK_2 = 0;
+bool isFlowOK_1 = false;
+bool isFlowOK_2 = false;
 int retryCount_1 = 0;
 int retryCount_2 = 0;
 
-const uint16_t syncPattern1 = 0xFEED;
-const uint16_t syncPattern2 = 0xFACE;
-
+const char* syncPattern = "4276";
 
 void setup() {
   Serial.begin(9600);
@@ -31,7 +29,7 @@ void setup() {
   digitalWrite(csPinFlow_2, LOW); 
   digitalWrite(csPinFlow_2, HIGH);  // Make sure flow_2 is NOT seleced
   if (flow_1.begin()) {
-    isFlowOK_1 = 1;
+    isFlowOK_1 = true;
   }
   else
   {
@@ -40,7 +38,7 @@ void setup() {
   digitalWrite(csPinFlow_1, LOW); 
   digitalWrite(csPinFlow_1, HIGH);  // Make sure flow_1 is NOT seleced
   if (flow_2.begin()) {
-    isFlowOK_2 = 1;
+    isFlowOK_2 = true;
   }
   else
   {
@@ -129,12 +127,29 @@ void requestEvent()
   // Get motion count since last call
   readFlowSensors();
 
-  wireWriteData(syncPattern1);
-  wireWriteData(syncPattern2);
-  wireWriteData(isFlowOK_1);
-  wireWriteData(isFlowOK_2);
+  wireWriteData( *((uint32_t*)syncPattern) );
+  if(isFlowOK_1)
+  {
+    wireWriteData('1');
+  }
+  else
+  {
+    wireWriteData('0');
+  }
+  wireWriteData(',');
+  if(isFlowOK_2)
+  {
+    wireWriteData('1');
+  }
+  else
+  {
+    wireWriteData('0');
+  }
+  wireWriteData(',');
   wireWriteData(deltaX1);
-  wireWriteData(deltaY1);
+  wireWriteData(',');  wireWriteData(deltaY1);
+  wireWriteData(',');
   wireWriteData(deltaX2);
+  wireWriteData(',');
   wireWriteData(deltaY2);  // 14 bytes total
 }
